@@ -4,6 +4,11 @@ import { useNavigate } from "react-router-dom";
 function Navbar() {
   const navigate = useNavigate();
 
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -15,11 +20,15 @@ function Navbar() {
           Home
         </Button>
 
+        <Button color="inherit" onClick={() => navigate("/users")}>
+          Usuarios
+        </Button>
+
         <Button color="inherit" onClick={() => navigate("/profile")}>
           Profile
         </Button>
 
-        <Button color="inherit" onClick={() => navigate("/")}>
+        <Button color="inherit" onClick={logout}>
           Logout
         </Button>
       </Toolbar>
