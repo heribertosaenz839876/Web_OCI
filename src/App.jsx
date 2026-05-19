@@ -5,8 +5,8 @@ import Profile from "./pages/Profile";
 import Users from "./pages/Users";
 
 function ProtectedRoute({ children }) {
-  const user = localStorage.getItem("user");
-  return user ? children : <Navigate to="/" />;
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/" />;
 }
 
 function App() {

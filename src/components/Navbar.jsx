@@ -1,11 +1,12 @@
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { clearSession } from "../auth";
 
 function Navbar() {
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem("user");
+    clearSession();
     navigate("/");
   };
 

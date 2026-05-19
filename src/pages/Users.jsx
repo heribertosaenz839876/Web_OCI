@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { API_URL } from "../config";
+import { authHeaders } from "../auth";
 import {
   Alert,
   Box,
@@ -26,7 +27,9 @@ function Users() {
 
   const getUsers = async () => {
     try {
-      const response = await fetch(`${API_URL}/users`);
+      const response = await fetch(`${API_URL}/users`, {
+        headers: authHeaders(),
+      });
       const data = await response.json();
 
       if (!response.ok) {
@@ -57,6 +60,7 @@ function Users() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...authHeaders(),
         },
         body: JSON.stringify(form),
       });
@@ -82,6 +86,7 @@ function Users() {
     try {
       const response = await fetch(`${API_URL}/users/${id}`, {
         method: "DELETE",
+        headers: authHeaders(),
       });
 
       const data = await response.json();
