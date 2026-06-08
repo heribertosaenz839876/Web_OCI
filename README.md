@@ -1,18 +1,22 @@
-# React + Vite
+# Web OCI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend en React conectado con la REST API de `Api_OCI`.
 
-Currently, two official plugins are available:
+## Práctica React URL + Hooks + LifeCycle
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- URL dinámica: desde la lista de `/users` se puede abrir el detalle de cada
+  usuario en `/users/:id`.
+- Hook personalizado `useAuth`: centraliza el usuario, token, estado de
+  autenticación y cierre de sesión.
+- Hook personalizado `useUsers`: centraliza la consulta, creación y eliminación
+  de usuarios.
+- Componente `LifecycleDemo`: imprime en la consola cuando se monta, actualiza y
+  desmonta. Se encuentra en la pantalla Home.
 
-## React Compiler
+## Ejecución
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Levantar el proyecto `Api_OCI`.
+2. Crear `.env` a partir de `.env.example` si la API no usa
+   `http://localhost:3000`.
+3. Ejecutar `npm install`.
+4. Ejecutar `npm run dev`.

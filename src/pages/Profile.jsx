@@ -1,8 +1,9 @@
 import Navbar from "../components/Navbar";
 import { Container, Typography, Paper, Avatar, Box } from "@mui/material";
+import useAuth from "../hooks/useAuth";
 
 function Profile() {
-  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const { user = {} } = useAuth();
   const initial = (user.name || user.username || "U").charAt(0).toUpperCase();
 
   return (

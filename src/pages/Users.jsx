@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { API_URL } from "../config";
-import { authHeaders } from "../auth";
+import useAuth from "../hooks/useAuth";
+import useUsers from "../hooks/useUsers";
 import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   Container,
   Paper,
   Table,
@@ -19,32 +21,17 @@ import {
 } from "@mui/material";
 
 function Users() {
-  const loggedUser = JSON.parse(localStorage.getItem("user"));
-  const [users, setUsers] = useState([]);
+  const { user: loggedUser } = useAuth();
+  const {
+    users,
+    loading,
+    error,
+    setError,
+    createUser,
+    deleteUser,
+  } = useUsers();
   const [form, setForm] = useState({ name: "", username: "", password: "" });
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const getUsers = async () => {
-    try {
-      const response = await fetch(`${API_URL}/users`, {
-        headers: authHeaders(),
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.msg || "Error al obtener usuarios");
-      }
-
-      setUsers(data);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, []);
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -56,26 +43,11 @@ function Users() {
     setSuccess("");
 
     try {
-      const response = await fetch(`${API_URL}/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(),
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.msg || "Error al crear usuario");
-      }
-
-      setUsers([...users, data]);
+      await createUser(form);
       setForm({ name: "", username: "", password: "" });
       setSuccess("Usuario agregado correctamente");
-    } catch (error) {
-      setError(error.message);
+    } catch (requestError) {
+      setError(requestError.message);
     }
   };
 
@@ -84,21 +56,10 @@ function Users() {
     setSuccess("");
 
     try {
-      const response = await fetch(`${API_URL}/users/${id}`, {
-        method: "DELETE",
-        headers: authHeaders(),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.msg || "Error al eliminar usuario");
-      }
-
-      setUsers(users.filter((user) => user._id !== id));
+      await deleteUser(id);
       setSuccess("Usuario eliminado correctamente");
-    } catch (error) {
-      setError(error.message);
+    } catch (requestError) {
+      setError(requestError.message);
     }
   };
 
@@ -112,6 +73,7 @@ function Users() {
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+        {loading && <CircularProgress sx={{ mb: 2 }} />}
 
         <Paper sx={{ p: 3, mb: 4 }}>
           <Typography variant="h6" gutterBottom>
@@ -162,6 +124,13 @@ function Users() {
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell align="right">
+                    <Button
+                      component={RouterLink}
+                      to={`/users/${user._id}`}
+                      sx={{ mr: 1 }}
+                    >
+                      Ver detalle
+                    </Button>
                     <Button color="error" variant="outlined" disabled={loggedUser?._id === user._id} onClick={() => handleDelete(user._id)}>
                       {loggedUser?._id === user._id ? "Sesión actual" : "ELIMINAR"}
                     </Button>

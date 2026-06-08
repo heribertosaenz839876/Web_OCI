@@ -3,10 +3,12 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Users from "./pages/Users";
+import UserDetail from "./pages/UserDetail";
+import useAuth from "./hooks/useAuth";
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/" />;
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/" />;
 }
 
 function App() {
@@ -38,6 +40,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/users/:id"
+          element={
+            <ProtectedRoute>
+              <UserDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

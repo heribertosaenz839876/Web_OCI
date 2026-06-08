@@ -1,12 +1,13 @@
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { clearSession } from "../auth";
+import useAuth from "../hooks/useAuth";
 
 function Navbar() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const logout = () => {
-    clearSession();
+  const handleLogout = () => {
+    logout();
     navigate("/");
   };
 
@@ -29,7 +30,7 @@ function Navbar() {
           Profile
         </Button>
 
-        <Button color="inherit" onClick={logout}>
+        <Button color="inherit" onClick={handleLogout}>
           Logout
         </Button>
       </Toolbar>
